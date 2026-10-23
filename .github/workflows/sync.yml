@@ -1,0 +1,25 @@
+name: Sync upstream
+
+on:
+  schedule:
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch upstream
+        run: git remote add upstream https://github.com/xiaoyang111222/cn-math-taxonomy.git && git fetch upstream main
+
+      - name: Fast-forward to upstream
+        run: git merge --ff-only FETCH_HEAD || echo "HAS_DIVERGENCE"
+
+      - name: Push to fork
+        run: git push origin main
