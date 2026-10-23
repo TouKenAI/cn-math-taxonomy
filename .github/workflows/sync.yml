@@ -14,12 +14,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Fetch upstream
         run: git remote add upstream https://github.com/xiaoyang111222/cn-math-taxonomy.git && git fetch upstream main
 
-      - name: Fast-forward to upstream
-        run: git merge --ff-only FETCH_HEAD || echo "HAS_DIVERGENCE"
+      - name: Merge upstream (no-op if already current)
+        run: git merge upstream/main -m "chore: sync upstream" --no-edit
 
       - name: Push to fork
         run: git push origin main
