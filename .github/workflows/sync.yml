@@ -1,27 +1,19 @@
 name: Sync upstream
-
 on:
   schedule:
     - cron: '23 3 * * *'
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Fetch upstream
-        run: git remote add upstream https://github.com/xiaoyang111222/cn-math-taxonomy.git && git fetch upstream main
-
-      - name: Merge upstream (no-op if already current)
-        run: git merge upstream/main -m "chore: sync upstream" --no-edit
-
-      - name: Push to fork
-        run: git push origin main
+      - run: |
+          git remote add upstream https://github.com/xiaoyang111222/cn-math-taxonomy.git
+          git fetch upstream main
+          git merge upstream/main -m "chore: sync upstream" --no-edit
+          git push origin main
